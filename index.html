@@ -76,26 +76,11 @@
                     <input type="number" id="slEntryPrice" step="0.01" required>
                 </div>
                 <div class="input-row">
-                    <label>Desired Amount</label>
+                    <label>Profit/Loss Amount</label>
                     <input type="number" id="desiredAmount" step="0.01">
                 </div>
             </div>
-
-            <div class="input-group">
-                <div class="input-row">
-                    <label>Leverage (1-200x)</label>
-                    <input type="number" id="slLeverage" min="1" max="200" value="1" required>
-                </div>
-                <div class="input-row">
-                    <label>Direction</label>
-                    <select id="direction">
-                        <option value="long">Long</option>
-                        <option value="short">Short</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group">
+<div class="input-group">
                 <div class="input-row">
                     <label>Investment Amount</label>
                     <input type="number" id="slQuantity" step="0.01" required>
@@ -103,6 +88,19 @@
                 <div class="input-row">
                     <label>Currency Rate (1$ = ₹__)</label>
                     <input type="number" id="slCurrencyRate" value="85" step="0.1">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-row">
+                    <label>Leverage (1-200x)</label>
+                    <input type="number" id="slLeverage" min="1" max="200" value="1" required>
+                </div>
+                <div class="input-row">
+                    <label>Type</label>
+                    <select id="direction">
+                        <option value="long">Target</option>
+                        <option value="short">Stop Loss</option>
+                    </select>
                 </div>
             </div>
 
