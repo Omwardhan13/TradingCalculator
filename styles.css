@@ -43,7 +43,9 @@ h1 {
     margin-bottom: 2rem;
 }
 h2 {
-    margin-bottom: 1rem;
+    margin-top: 0.4rem;
+    margin-bottom: 1.2rem;
+    color: var(--accent);
 }
 .input-group {
     margin-bottom: 1.5rem;
