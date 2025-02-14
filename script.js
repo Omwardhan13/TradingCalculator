@@ -56,5 +56,5 @@ function calculateExitPrice() {
     }
 
     document.getElementById('exitPriceResult').innerHTML = 
-        `Required Exit Price: $${exitPrice.toFixed(2)}`;
+        `Required Exit Price: ${exitPrice.toFixed(2)} USD`;
 }
