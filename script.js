@@ -1,60 +1,101 @@
-document.getElementById('quantityType').addEventListener('change', function() {
-    const type = this.value;
-    document.getElementById('fiatQuantity').style.display = type === 'lot' ? 'none' : 'block';
-    document.getElementById('lotQuantity').style.display = type === 'lot' ? 'block' : 'none';
-});
+document.addEventListener("DOMContentLoaded", () => {
+      toggleInputs("quantityType", "lotQuantity", "fiatQuantity", "leverageContainer");
+      toggleInputs("slQuantityType", "slLotQuantity", "slFiatQuantity", "slLeverageContainer");
+    });
 
-function calculatePnl() {
-    const entry = parseFloat(document.getElementById('entryPrice').value);
-    const exit = parseFloat(document.getElementById('exitPrice').value);
-    const leverage = parseInt(document.getElementById('leverage').value);
-    const quantityType = document.getElementById('quantityType').value;
-    const currencyRate = parseFloat(document.getElementById('currencyRate').value);
-    
-    let quantityUSD;
-    if(quantityType === 'inr') {
-        const quantity = parseFloat(document.getElementById('quantity').value);
-        quantityUSD = quantity / currencyRate;
-    } else if(quantityType === 'usd') {
-        quantityUSD = parseFloat(document.getElementById('quantity').value);
-    } else { // Lot
-        const lotMultiplier = parseFloat(document.getElementById('lotMultiplier').value) || 0.001;
-        const lotAmount = parseFloat(document.getElementById('lotAmount').value) || 1;
-        quantityUSD = lotMultiplier * entry * lotAmount;
+    // Tab switching functionality
+    function switchTab(tab) {
+      const pnlTab = document.getElementById('pnlTab');
+      const slTab = document.getElementById('slTab');
+      const pnlCalculator = document.getElementById('pnlCalculator');
+      const slCalculator = document.getElementById('slCalculator');
+
+      if (tab === 'pnl') {
+        pnlTab.classList.add('tab-active');
+        slTab.classList.remove('tab-active');
+        pnlCalculator.classList.remove('hidden');
+        slCalculator.classList.add('hidden');
+      } else {
+        slTab.classList.add('tab-active');
+        pnlTab.classList.remove('tab-active');
+        slCalculator.classList.remove('hidden');
+        pnlCalculator.classList.add('hidden');
+      }
     }
 
-    const priceChange = (exit - entry) / entry;
-    const pnlUSD = quantityUSD * priceChange * leverage;
-    const pnlINR = pnlUSD * currencyRate;
-
-    let result;
-    if(quantityType === 'inr') {
-        result = `Profit/Loss: ₹${pnlINR.toFixed(2)}<br>($${pnlUSD.toFixed(2)})`;
-    } else {
-        result = `Profit/Loss: $${pnlUSD.toFixed(2)}<br>(₹${pnlINR.toFixed(2)})`;
+    function toggleInputs(selectId, lotContainerId, fiatContainerId, leverageContainerId) {
+      const type = document.getElementById(selectId).value;
+      const isLot = type === "lot";
+      document.getElementById(fiatContainerId).style.display = isLot ? "none" : "block";
+      document.getElementById(lotContainerId).style.display = isLot ? "block" : "none";
+      document.getElementById(leverageContainerId).style.display = isLot ? "none" : "block";
     }
 
-    document.getElementById('result').innerHTML = result;
-}
+    document.getElementById("quantityType").addEventListener("change", () => {
+      toggleInputs("quantityType", "lotQuantity", "fiatQuantity", "leverageContainer");
+    });
 
-function calculateExitPrice() {
-    const entry = parseFloat(document.getElementById('slEntryPrice').value);
-    const desiredAmount = parseFloat(document.getElementById('desiredAmount').value);
-    const leverage = parseInt(document.getElementById('slLeverage').value);
-    const direction = document.getElementById('direction').value;
-    const quantity = parseFloat(document.getElementById('slQuantity').value);
-    const currencyRate = parseFloat(document.getElementById('slCurrencyRate').value);
+    document.getElementById("slQuantityType").addEventListener("change", () => {
+      toggleInputs("slQuantityType", "slLotQuantity", "slFiatQuantity", "slLeverageContainer");
+    });
 
-    const quantityUSD = quantity / currencyRate;
-    const requiredPriceChange = (desiredAmount / currencyRate) / (quantityUSD * leverage);
-    
-    let exitPrice;
-    if(direction === 'long') {
-        exitPrice = entry * (1 + requiredPriceChange);
-    } else {
-        exitPrice = entry * (1 - requiredPriceChange);
+    function calculatePnl() {
+      const entry = parseFloat(document.getElementById("entryPrice").value);
+      const exit = parseFloat(document.getElementById("exitPrice").value);
+      const quantityType = document.getElementById("quantityType").value;
+      const currencyRate = parseFloat(document.getElementById("currencyRate").value);
+
+      let quantityUSD, leverage;
+      if (quantityType === "lot") {
+        const lotSize = parseFloat(document.getElementById("lotSize").value) || 0.001;
+        const lotAmount = parseFloat(document.getElementById("lotAmount").value) || 1;
+        quantityUSD = lotSize * entry * lotAmount;
+        leverage = 1;
+      } else {
+        const quantity = parseFloat(document.getElementById("quantity").value);
+        quantityUSD = quantityType === "inr" ? quantity / currencyRate : quantity;
+        leverage = parseFloat(document.getElementById("leverage").value);
+      }
+
+      const priceChange = (exit - entry) / entry;
+      const pnlUSD = quantityUSD * priceChange * leverage;
+      const pnlINR = pnlUSD * currencyRate;
+
+      const resultElement = document.getElementById("result");
+      
+      if (pnlINR > 0) {
+        resultElement.innerHTML = `<span class="text-green-500">Profit: ₹${pnlINR.toFixed(2)} ($${pnlUSD.toFixed(2)})</span>`;
+      } else {
+        resultElement.innerHTML = `<span class="text-red-500">Loss: ₹${Math.abs(pnlINR).toFixed(2)} ($${Math.abs(pnlUSD).toFixed(2)})</span>`;
+      }
     }
 
-    document.getElementById('exitPriceResult').innerHTML = 
-        `Required Exit Price: ${exitPrice.toFixed(2)} USD`;
-}
+    function calculateExitPrice() {
+      const entry = parseFloat(document.getElementById("slEntryPrice").value);
+      const desiredAmount = parseFloat(document.getElementById("desiredAmount").value);
+      const quantityType = document.getElementById("slQuantityType").value;
+      const currencyRate = parseFloat(document.getElementById("slCurrencyRate").value);
+
+      let positionSize, leverage;
+      if (quantityType === "lot") {
+        const lotSize = parseFloat(document.getElementById("slLotSize").value) || 0.001;
+        const lotAmount = parseFloat(document.getElementById("slLotAmount").value) || 1;
+        positionSize = lotSize * entry * lotAmount;
+        leverage = 1;
+      } else {
+        const amount = parseFloat(document.getElementById("slQuantity").value);
+        positionSize = quantityType === "inr" ? amount / currencyRate : amount;
+        leverage = parseFloat(document.getElementById("slLeverage").value);
+      }
+
+      const direction = document.getElementById("direction").value;
+      const requiredProfitUSD = desiredAmount / currencyRate;
+      const priceChange = requiredProfitUSD / (positionSize * leverage);
+
+      const exitPrice = direction === "long" 
+        ? entry * (1 + priceChange) 
+        : entry * (1 - priceChange);
+
+      const resultElement = document.getElementById("exitPriceResult");
+      resultElement.innerHTML = `Required Exit Price: $${exitPrice.toFixed(2)}`;
+    }
