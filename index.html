@@ -1,118 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Trading Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+    }
+    
+    .glass-effect {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .material-icons-round {
+      font-family: 'Material Icons Round';
+    }
+    
+    input:focus, select:focus {
+      outline: 2px solid #60a5fa;
+      outline-offset: 2px;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Tab Button Styles */
+    .tab-button {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid white; /* gray-600 */
+      border-radius: 0.5rem;
+      background: rgba(31, 41, 55, 0.8);
+      color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .tab-button:hover {
+      border-color: #3b82f6;
+    }
+
+    .tab-active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Trading Calculator</h1>
-        
-        <div class="calculator-section">
-            <h2>PnL Calculator</h2>
-            <div class="input-group">
-                <div class="input-row">
-                    <label>Entry Price (USD)</label>
-                    <input type="number" id="entryPrice" step="0.01" required>
-                </div>
-                <div class="input-row">
-                    <label>Exit/Current Price (USD)</label>
-                    <input type="number" id="exitPrice" step="0.01" required>
-                </div>
-            </div>
+<body class="text-gray-100">
+  <div class="min-h-screen flex flex-col">
+    <main class="container mx-auto px-4 py-8 flex-grow">
+      <!-- Header -->
+      <header class="text-center mb-12">
+        <div class="inline-block p-3 rounded-full bg-blue-500/10 mb-4">
+          <span class="material-icons-round text-4xl gradient-text">currency_bitcoin</span>
+        </div>
+        <h1 class="text-5xl font-bold mb-4 pb-2 gradient-text">Crypto Trading Calculator</h1>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+          Professional-grade calculations for cryptocurrency traders.
+        </p>
+      </header>
 
-            <div class="input-group">
-                <div class="input-row">
-                    <label>Leverage (1-200x)</label>
-                    <input type="number" id="leverage" min="1" max="200" value="1" required>
-                </div>
-                <div class="input-row">
-                    <label>Quantity Type</label>
-                    <select id="quantityType">
-                        <option value="inr">INR</option>
-                        <option value="usd">USD</option>
-                        <option value="lot">Lot</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-group" style="gap: 1rem; margin-bottom: 0;">
-                    <div class="input-row" id="fiatQuantity" style="flex: 1;">
-                        <label>Investment Amount</label>
-                        <input type="number" id="quantity" step="0.01" required>
-                    </div>
-                    <div class="input-row" style="flex: 1;">
-                        <label>Currency Rate (1$ = ₹__)</label>
-                        <input type="number" id="currencyRate" value="85" step="0.1">
-                    </div>
-                </div>
-                <div class="input-row" id="lotQuantity" style="display: none;">
-                    <div class="input-group">
-                        <div class="input-row">
-                            <label>Lot Size ( __ × Entry Price)</label>
-                            <input type="number" id="lotMultiplier" placeholder="0.001" step="0.001">
-                        </div>
-                        <div class="input-row">
-                            <label>Number of Lots</label>
-                            <input type="number" id="lotAmount" value="1" step="0.01">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="calculatePnl()">Calculate</button>
-            <div class="result" id="result">Result will be displayed here</div>
+      <!-- Calculator Tabs -->
+      <div class="max-w-7xl mx-auto mb-8">
+        <div class="flex space-x-4 justify-center mb-8">
+          <button onclick="switchTab('pnl')" id="pnlTab" class="tab-button tab-active flex items-center space-x-2">
+            <span class="material-icons-round">trending_up</span>
+            <span>P&L Calculator</span>
+          </button>
+          <button onclick="switchTab('sl')" id="slTab" class="tab-button flex items-center space-x-2">
+            <span class="material-icons-round">timer</span>
+            <span>Exit Price Calculator</span>
+          </button>
         </div>
 
-        <div class="calculator-section">
-            <h2>Stop Loss/Target Calculator</h2>
-            <div class="input-group">
-                <div class="input-row">
-                    <label>Entry Price (USD)</label>
-                    <input type="number" id="slEntryPrice" step="0.01" required>
-                </div>
-                <div class="input-row">
-                    <label>Profit/Loss Amount</label>
-                    <input type="number" id="desiredAmount" step="0.01">
-                </div>
+        <!-- Calculator Cards -->
+        <div class="relative">
+          <!-- PnL Calculator Card -->
+          <div id="pnlCalculator" class="glass-effect rounded-2xl p-8 transition-all duration-300">
+            <div class="flex items-center space-x-3 mb-6">
+              <span class="material-icons-round text-blue-500 text-3xl">trending_up</span>
+              <h2 class="text-2xl font-bold">Profit/Loss Calculator</h2>
             </div>
-<div class="input-group">
-                <div class="input-row">
-                    <label>Investment Amount</label>
-                    <input type="number" id="slQuantity" step="0.01" required>
+            
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Entry Price (USD)</label>
+                  <input type="number" id="entryPrice" step="10" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
-                <div class="input-row">
-                    <label>Currency Rate (1$ = ₹__)</label>
-                    <input type="number" id="slCurrencyRate" value="85" step="0.1">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Exit Price (USD)</label>
+                  <input type="number" id="exitPrice" step="10" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div id="leverageContainer">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (1-200x)</label>
+                  <input type="number" id="leverage" min="1" max="200" value="1" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Quantity Type</label>
+                  <select id="quantityType"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500">
+                    <option value="inr">INR</option>
+                    <option value="usd">USD</option>
+                    <option value="lot">Lot</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div id="fiatQuantity">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Investment Amount</label>
+                  <input type="number" id="quantity" step="10" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate (1$ = ₹)</label>
+                  <input type="number" id="currencyRate" value="85" step="0.1"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <div id="lotQuantity" class="grid grid-cols-1 lg:grid-cols-2 gap-4" style="display: none;">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (BTC)</label>
+                  <input type="number" id="lotSize" placeholder="0.001" step="0.001"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Number of Lots</label>
+                  <input type="number" id="lotAmount" value="1" step="1"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <button onclick="calculatePnl()"
+                class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]">
+                <span class="flex items-center justify-center space-x-2">
+                  <span class="material-icons-round">calculate</span>
+                  <span>Calculate P&L</span>
+                </span>
+              </button>
+
+              <div id="result" class="text-center text-xl font-medium py-3 px-4 rounded-lg bg-gray-800/30"></div>
             </div>
-            <div class="input-group">
-                <div class="input-row">
-                    <label>Leverage (1-200x)</label>
-                    <input type="number" id="slLeverage" min="1" max="200" value="1" required>
-                </div>
-                <div class="input-row">
-                    <label>Type</label>
-                    <select id="direction">
-                        <option value="long">Target</option>
-                        <option value="short">Stop Loss</option>
-                    </select>
-                </div>
+          </div>
+
+          <!-- Stop Loss/Target Calculator Card -->
+          <div id="slCalculator" class="glass-effect rounded-2xl p-8 transition-all duration-300 hidden">
+            <div class="flex items-center space-x-3 mb-6">
+              <span class="material-icons-round text-green-500 text-3xl">timer</span>
+              <h2 class="text-2xl font-bold">Exit Price Calculator</h2>
             </div>
 
-            <button onclick="calculateExitPrice()">Calculate Exit Price</button>
-            <div class="result" id="exitPriceResult">Result will be displayed here</div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Entry Price (USD)</label>
+                  <input type="number" id="slEntryPrice" step="10" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Desired Profit/Loss (₹)</label>
+                  <input type="number" id="desiredAmount" step="10"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div id="slLeverageContainer">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (1-200x)</label>
+                  <input type="number" id="slLeverage" min="1" max="200" value="1" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Direction</label>
+                  <select id="direction"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500">
+                    <option value="long">Long</option>
+                    <option value="short">Short</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Quantity Type</label>
+                  <select id="slQuantityType"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500">
+                    <option value="inr">INR</option>
+                    <option value="usd">USD</option>
+                    <option value="lot">Lot</option>
+                  </select>
+                </div>
+                <div id="slFiatQuantity">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Investment Amount</label>
+                  <input type="number" id="slQuantity" step="0.01" required
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <div id="slLotQuantity" class="grid grid-cols-1 lg:grid-cols-2 gap-4" style="display: none;">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (BTC)</label>
+                  <input type="number" id="slLotSize" placeholder="0.001" step="0.001"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Number of Lots</label>
+                  <input type="number" id="slLotAmount" value="1" step="1"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate (1$ = ₹)</label>
+                  <input type="number" id="slCurrencyRate" value="85" step="0.1"
+                    class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
+                </div>
+              </div>
+
+              <button onclick="calculateExitPrice()"
+                class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]">
+                <span class="flex items-center justify-center space-x-2">
+                  <span class="material-icons-round">calculate</span>
+                  <span>Calculate Exit Price</span>
+                </span>
+              </button>
+
+              <div id="exitPriceResult" class="text-center text-xl font-medium py-3 px-4 rounded-lg bg-gray-800/30"></div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </main>
 
-    <footer>
-        Created by <a href="https://www.linkedin.com/in/omwardhan-mishra-067637241" target="_blank">Omwardhan Mishra</a>
+    <!-- Footer -->
+    <footer class="py-6 text-center text-gray-400 bg-gray-950/50 backdrop-blur-sm">
+      <p>Created by <a href="https://example.com" class="text-blue-400 hover:text-blue-300 transition-colors">Omwardhan Mishra</a></p>
     </footer>
-
-    <script src="script.js"></script>
+  </div>
+  <script src="script.js">
+  </script>
 </body>
 </html>
