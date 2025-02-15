@@ -109,7 +109,7 @@
 
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div id="leverageContainer">
-                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (1-200x)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (10x, 50x, etc)</label>
                   <input type="number" id="leverage" min="1" max="200" value="1" required
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
@@ -131,7 +131,7 @@
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate (1$ = ₹)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate ($1 = ₹__)</label>
                   <input type="number" id="currencyRate" value="85" step="0.1"
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
@@ -139,7 +139,7 @@
 
               <div id="lotQuantity" class="grid grid-cols-1 lg:grid-cols-2 gap-4" style="display: none;">
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (BTC)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (__ × Entry Price)</label>
                   <input type="number" id="lotSize" placeholder="0.001" step="0.001"
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
@@ -185,7 +185,7 @@
 
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div id="slLeverageContainer">
-                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (1-200x)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Leverage (10x, 50x, etc)</label>
                   <input type="number" id="slLeverage" min="1" max="200" value="1" required
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
@@ -218,7 +218,7 @@
 
               <div id="slLotQuantity" class="grid grid-cols-1 lg:grid-cols-2 gap-4" style="display: none;">
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (BTC)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">1 Lot Value (__ × Entry Price)</label>
                   <input type="number" id="slLotSize" placeholder="0.001" step="0.001"
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
@@ -231,7 +231,7 @@
 
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate (1$ = ₹)</label>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Currency Rate ($1 = ₹__)</label>
                   <input type="number" id="slCurrencyRate" value="85" step="0.1"
                     class="w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg transition-colors focus:border-blue-500" />
                 </div>
