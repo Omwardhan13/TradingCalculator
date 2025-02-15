@@ -97,5 +97,5 @@ document.addEventListener("DOMContentLoaded", () => {
         : entry * (1 - priceChange);
 
       const resultElement = document.getElementById("exitPriceResult");
-      resultElement.innerHTML = `Required Exit Price: $${exitPrice.toFixed(2)}`;
+      resultElement.innerHTML = `Required Exit Price: ${exitPrice.toFixed(2)} USD`;
     }
