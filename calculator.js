@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Calculate total trade value (with leverage)
-        const tradeValue = lotSize * lotValue * entryPrice * leverage;
+        const tradeValue = lotSize * lotValue * entryPrice;
         const tradeValueInr = tradeValue * usdInrRate;
         document.getElementById('tradeValue').textContent = `$${tradeValue.toFixed(2)}`;
         document.getElementById('tradeValueInr').textContent = `₹${tradeValueInr.toFixed(2)}`;
