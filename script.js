@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const leverage = parseFloat(document.getElementById('leverage').value) || 1;
             const usdInrRate = parseFloat(document.getElementById('usdInrRate').value) || 85;
 
-            const tradeValue = lotSize * lotValue * entryPrice * leverage;
+            const tradeValue = lotSize * lotValue * entryPrice;
             const tradeValueInr = tradeValue * usdInrRate;
             document.getElementById('tradeValue').textContent = `$${tradeValue.toFixed(2)}`;
             document.getElementById('tradeValueInr').textContent = `₹${tradeValueInr.toFixed(2)}`;
